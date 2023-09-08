@@ -82,7 +82,7 @@
                                 </div>
                             </form>
                             <p class="terms-conditions">
-                                © 2020 All Rights Reserved. <router-link to="/">STC</router-link> is a product of IT Department. <a href="javascript:void(0);">Cookie Preferences</a>,
+                                © 2020 All Rights Reserved. <router-link to="/">STC</router-link> is a product of IT Department . <a href="javascript:void(0);">Cookie Preferences</a>,
                                 <!-- <a href="javascript:void(0);">Privacy</a>, and <a href="javascript:void(0);">Terms</a>. -->
                             </p>
                         </div>
