@@ -8,7 +8,7 @@
                             <h1 class="">
                                 Log In to <router-link to="/"><span class="brand-name">STC</span></router-link>
                             </h1>
-                            <p class="signup-link">New Here? <router-link to="/auth/register">Create an account</router-link></p>
+                            <p class="signup-link">New Here ? <router-link to="/auth/register">Create an account</router-link></p>
                             <form class="text-start" @submit.prevent="loginFunction">
                                 <div class="form">
                                     <div id="username-field" class="field-wrapper input">
