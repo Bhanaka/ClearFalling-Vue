@@ -23,6 +23,12 @@ const routes = [
         name : 'letter' ,
         component:() =>  import(/* webpackChunkName: "letter" */ '../views/falling/letter.vue'),
     },
+    {
+        path: '/auth/login',
+        name: 'login',
+        component: () => import(/* webpackChunkName: "auth-login" */ '../views/auth/login.vue'),
+        meta: { layout: 'auth' },
+    },
     //components
     {
         path: '/components/tabs',

@@ -104,7 +104,6 @@
     import { getAPI } from '../axiosApiSettings';
     import { useAuthStore } from '@/store/authStore' ;
     useMeta({ title: 'Login Cover' });
-
     const router = useRouter() ;
     const authStore = useAuthStore() ;
     const userName = ref('') ;
@@ -112,26 +111,30 @@
     const accessToken = ref('');
     const refreshToken = ref('');
     const userInfor = ref();
-
     const loginFunction = () =>{
         logedUserDetails();
     }
     const logedUserDetails = async () => {
         // debugger ;
-        await getAPI.post('/process/login/',{
+        await getAPI.post('/admintation/login',{
+            // await getAPI.post('/process/login/',{
+
             username : userName.value ,
             password : userPassword.value
         }).then((response) => {
-            accessToken.value = response.data.access ;
-            refreshToken.value = response.data.refresh ;
-            if(accessToken !=null){
-                authStore.login(userName.value ,userPassword.value);
+            // alert(response);
+            router.push({name:'index2'});
+            authStore.login(userName.value ,userPassword.value);
+            // accessToken.value = response.data.access ;
+            // refreshToken.value = response.data.refresh ;
+            // if(accessToken !=null){
+            //     authStore.login(userName.value ,userPassword.value);
 
-                // authStore.setName(userName.value) ;
-                userDetailsInfor();
-                router.push({name:'index2'});
+            //     // authStore.setName(userName.value) ;
+            //     userDetailsInfor();
+            //     router.push({name:'index2'});
 
-            }
+            // }
         })
     }
     const userDetailsInfor = () =>{

@@ -290,7 +290,10 @@
         status.value = true ;
     }
     const getLastId = async () =>{
-        await getAPI.get('/process/lastrowid/')
+        // Django Api
+        // await getAPI.get('/process/lastrowid/')
+        // Spring boot 
+        await getAPI.get('/forestLetter/LastId')
                 .then((response)=>{
                     nextNumber.value = response.data+1;
                     currentDate.value =new Date().toLocaleDateString();
