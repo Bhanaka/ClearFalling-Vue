@@ -296,8 +296,14 @@
         await getAPI.get('/forestLetter/LastId')
                 .then((response)=>{
                     nextNumber.value = response.data+1;
-                    currentDate.value =new Date().toLocaleDateString();
-                    sytemNo.value = 'STC/'+currentDate.value+' '+nextNumber.value;
+                    const date = new Date();
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+                    const day = String(date.getDate()).padStart(2, '0');
+
+                    const currentDate = `${year}-${month}-${day}`;
+                    // currentDate.value =date.toLocaleDateString('en-US', options);
+                    sytemNo.value = 'STC-'+currentDate+' '+nextNumber.value;
                 })
     }
     const getAllDetails = async () =>{
@@ -322,12 +328,21 @@
                 formData.append('original_excel',selectedFile.value);
                 console.log(formData);
                 console.log(selectedFile);
-                getAPI.post('/process/forestletter/',{
-                    system_no : sytemNo.value,
-                    my_ref : myRef.value ,
-                    issued_date : issuedDate.value ,
-                    received_date : receivedDate.value,
-                    original_excel : selectedFile.value
+                // Api for django 
+                // getAPI.post('/process/forestletter/',{
+                //api for spring boot
+                getAPI.post('/forestLetter/insertLetter',{
+                    // system_no : sytemNo.value,
+                    // my_ref : myRef.value ,
+                    // issued_date : issuedDate.value ,
+                    // received_date : receivedDate.value,
+                    // original_excel : selectedFile.value
+
+                    SysNo : sytemNo.value,
+                    myRef : myRef.value ,
+                    // issued_date : issuedDate.value ,
+                    Date : receivedDate.value,
+                    file : selectedFile.value
                 })
                 .then((response)=>{
                     console.log("save the forest letter ");
