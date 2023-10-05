@@ -105,6 +105,41 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-12 col-12 layout-spacing">
+                        <div class="statbox panel box box-shadow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                        <h4>Letter List</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row ">
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
+                                        <div class="panel br-6 p-0">
+                                            <div class="custom-table">
+                                                <v-client-table :data="letterList" :columns="letterColumns" :options="table_option">
+                                                    <template #excel="{ row }">
+                                                        <div>
+                                                            <input type="file" class="form-control form-control-sm" 
+                                                            @change="excelFileInputChange($event, row)"
+                                                            />
+                                                        </div>
+                                                    </template>
+                                                    <template #action="props">
+                                                        <a href="javascript:;" class="cancel" @click="view_row(props.row)">
+                                                            <button type="button" class="btn btn-primary btn-sm">View</button>
+                                                        </a>
+                                                    </template>
+                                                </v-client-table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div id="all_program" class="col-lg-12">
@@ -179,7 +214,7 @@
                                     <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
                                         <div class="panel br-6 p-0">
                                             <div class="custom-table">
-                                                <v-client-table :data="excelFiles" :columns="excleColumns" :options="table_option">
+                                                <v-client-table :data="letterList" :columns="excleColumns" :options="table_option">
                                                     <template #excel="{ row }">
                                                         <div>
                                                             <input type="file" class="form-control form-control-sm" 
@@ -229,7 +264,15 @@
     useMeta({ title: 'Request' });
 
     const columns = ref(['name', 'position', 'office', 'age', 'start_date', 'salary', 'actions' ]);
-    const excleColumns =  ref (['system_no' , 'my_ref','excel','action']);
+    const excleColumns =  ref (['letterId' , 'sysNo','myRef','excel','action']);
+    const letterColumns = ref (['letterId','sysNo','myRef','date','letterFile.fileName','excelFile']);
+    // const letterColumns = ref ([
+    //     { label: 'letterId', field: 'letterId' },
+    //     { label: 'B', field: 'sysNo' },
+    //     { label: 'C', field: 'myRef' },
+    //     { label: 'D', field: 'date' },
+    //     // { label: 'E', field: 'fileName' }
+    // ]);
     const items = ref([]);
     const table_option = ref({
         perPage: 10,
@@ -259,6 +302,9 @@
     const status =ref(false);
     const fileData = ref([]);
     const uploadExcelData = ref([]);
+
+    const letterList = ref([]);
+    const fileName = ref('');
     
     onMounted(() => {
         getLastId();
@@ -308,12 +354,13 @@
     }
     const getAllDetails = async () =>{
         try{
-            await getAPI.get('/process/forestletter/')
-            .then((response)=>{
-                excelFiles.value = response.data ;
-                console.log("test ");
-                console.log(excelFiles.value);
-                console.log(excelFiles);
+            // djanjo forestletter api
+            // await getAPI.get('/process/forestletter/')
+            await getAPI.get('/forestLetter/LettersDetails')
+                .then((response)=>{
+                    letterList.value = response.data ;
+                    console.log("get the all details of letter information");
+                    console.log(letterList.value);
                 })
         }catch(error){
         }
@@ -321,28 +368,23 @@
     const letterDetail =()=>{
         try{
             const formData = new FormData ();
-                formData.append('system_no',sytemNo.value);
-                formData.append('my_ref',myRef.value);
-                formData.append('issued_date',issuedDate.value);
-                formData.append('received_date',receivedDate.value);
-                formData.append('original_excel',selectedFile.value);
+                formData.append('sysNo',sytemNo.value);
+                formData.append('myRef',myRef.value);
+                formData.append('Date',receivedDate.value);
+                formData.append('file',selectedFile.value);
                 console.log(formData);
-                console.log(selectedFile);
                 // Api for django 
                 // getAPI.post('/process/forestletter/',{
                 //api for spring boot
-                getAPI.post('/forestLetter/insertLetter',{
+                getAPI.post('/forestLetter/insertLetter', formData , {
+                    headers:{
+                        'Content-Type':'multipart/form-data'
+                    }
                     // system_no : sytemNo.value,
                     // my_ref : myRef.value ,
                     // issued_date : issuedDate.value ,
                     // received_date : receivedDate.value,
                     // original_excel : selectedFile.value
-
-                    SysNo : sytemNo.value,
-                    myRef : myRef.value ,
-                    // issued_date : issuedDate.value ,
-                    Date : receivedDate.value,
-                    file : selectedFile.value
                 })
                 .then((response)=>{
                     console.log("save the forest letter ");
