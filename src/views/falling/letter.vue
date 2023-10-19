@@ -1,5 +1,4 @@
 <template>
-
     <div class="container">
         <teleport to="#breadcrumb">
             <ul class="navbar-nav flex-row">
@@ -225,10 +224,40 @@
                                                     </template>
                                                     <template #action="props">
                                                         <a href="javascript:;" class="cancel" @click="view_row(props.row)">
-                                                            <button type="button" class="btn btn-primary btn-sm">View</button>
+                                                            <button 
+                                                                type="button" 
+                                                                class="btn btn-primary mb-2 me-2" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#exampleModal"
+                                                                @click="openModal"
+                                                            >
+                                                                View
+                                                            </button>
                                                         </a>
                                                     </template>
                                                 </v-client-table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Upload The Excel Sheet</h5>
+                                                <button type="button" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table>
+                                                    <tr v-for="(row, index) in uploadExcelData  " :key="index">
+                                                      <td v-for="(cell, cIndex) in row" :key="cIndex">{{ cell }}</td>
+                                                    </tr>
+                                                  </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn" data-dismiss="modal" data-bs-dismiss="modal"><i class="flaticon-cancel-12"></i> Discard</button>
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-bs-dismiss="modal">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -306,8 +335,12 @@
 
     const letterList = ref([]);
     const fileName = ref('');
+
+    const modalVisible = ref(false);
+    const modalTarget = ref(null);
     
     onMounted(() => {
+
         getLastId();
         getAllDetails();
         bind_data();
@@ -328,7 +361,12 @@
         // Perform any specific actions based on the change
     });
 
-
+    const openModal = () => {
+        const modalTarget = document.querySelector("#exampleModal");
+        if (modalTarget) {
+        console.log("hhhhhhhhhhhhhhhhhhhhhh");
+        }
+    };
 
     const clearForm =() =>{
         myRef.value =  '' ;
@@ -347,7 +385,7 @@
                     const year = date.getFullYear();
                     const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based
                     const day = String(date.getDate()).padStart(2, '0');
-
+                    debugger;
                     const currentDate = `${year}-${month}-${day}`;
                     // currentDate.value =date.toLocaleDateString('en-US', options);
                     sytemNo.value = 'STC-'+currentDate+' '+nextNumber.value;
@@ -358,6 +396,7 @@
             // djanjo forestletter api
             // await getAPI.get('/process/forestletter/')
             await getAPI.get('/forestLetter/LettersDetails')
+            
                 .then((response)=>{
                     letterList.value = response.data ;
                     console.log("get the all details of letter information");
